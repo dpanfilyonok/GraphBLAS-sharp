@@ -3,9 +3,17 @@ solution: GraphBLAS-sharp.sln
 mono: none
 dotnet: 3.1
 
+addons:
+  apt:
+    packages:
+    - opencl-headers
+
+before_install:
+  - bash .travis/install_intel_opencl.sh
+
 install:
  - dotnet tool restore
  - dotnet paket restore
 
 script:
- - dotnet build
+ - dotnet test
