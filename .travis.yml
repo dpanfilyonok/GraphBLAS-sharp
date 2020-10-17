@@ -4,7 +4,9 @@ mono: none
 dotnet: 3.1
 
 script:
- - dotnet restore
+ - dotnet tool restore
+ - dotnet paket restore
+ - dotnet build
 
 branches:
   only:
