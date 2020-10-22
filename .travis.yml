@@ -12,16 +12,15 @@ addons:
   apt:
     packages:
     - clinfo
-    - opencl-headers
-    - ocl-icd-opencl-dev
+    - pocl-opencl-icd
 
-before_install:
-  - bash .travis/install_intel_opencl.sh
+# before_install:
+#   - bash .travis/install_intel_opencl.sh
 
 install:
   - dotnet tool restore
   - dotnet paket restore
 
 script:
-  # - clinfo
+  - clinfo
   - dotnet test
