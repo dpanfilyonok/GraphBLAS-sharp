@@ -8,6 +8,7 @@ env:
     - OMP_NUM_THREADS=4
     - AMDAPPSDKROOT=/opt/intel/opencl/
 
+dist: bionic
 addons:
   apt:
     packages:
