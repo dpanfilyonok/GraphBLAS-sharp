@@ -13,7 +13,7 @@ addons:
   apt:
     packages:
     - clinfo
-    - pocl-opencl-icd
+    - pocl
 
 # before_install:
 #   - bash .travis/install_intel_opencl.sh
