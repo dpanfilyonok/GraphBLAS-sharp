@@ -15,7 +15,7 @@ before_build:
   - cmd: dotnet tool restore
   - cmd: dotnet paket restore
 
-build:
+build_script:
   - project: GraphBLAS-sharp.sln
 
 test_script:
