@@ -52,11 +52,11 @@ module Vector =
     *)
 
     /// vec.[mask]
-    let extractSubVector (mask: Mask1D<_>) (vector: Vector<'a>) : GraphblasEvaluation<Vector<'a>> =
+    let extractSubVector (vector: Vector<'a>) (mask: Mask1D<_>) : GraphblasEvaluation<Vector<'a>> =
         failwith "Not Implemented yet"
 
     /// vec.[idx]
-    let extractValue (idx: int) (vector: Vector<'a>) : GraphblasEvaluation<Scalar<'a>> =
+    let extractValue (vector: Vector<'a>) (idx: int) : GraphblasEvaluation<Scalar<'a>> =
         failwith "Not Implemented yet"
 
     /// t <- vec
@@ -83,16 +83,30 @@ module Vector =
         operations
     *)
 
-    type VxmAlgebra<'a> =
-        | Semiring of plus: ClosedBinaryOp<'a> * times: ClosedBinaryOp<'a>
+    type VxmContext<'a, 'b when 'b : struct> internal(algebra: VxmAlgebra<'a>, ?mask: Vector<'b>) =
+        new(sr: Semiring<'a>, ?mask: Vector<'b>) = VxmContext(VxmSemiring sr)
 
-    let vxm (algebra: VxmAlgebra<'a>) (vector: Vector<'a>) (matrix: Matrix<'a>) : GraphblasEvaluation<Vector<'a>> =
+        member internal this.Algebra = algebra
+        member internal this.Mask = mask
+
+    and internal VxmAlgebra<'a> =
+        | VxmSemiring of Semiring<'a>
+
+    let vxm (vector: Vector<'a>) (matrix: Matrix<'a>) (context: VxmContext<'a, _>) : GraphblasEvaluation<Vector<'a>> =
         failwith "Not Implemented yet"
 
-    type EWiseAddAlgebra<'a> =
-        | ClosedBinaryOp of plus: ClosedBinaryOp<'a>
+    type EWiseAddContext<'a, 'b when 'b : struct> internal(algebra: EWiseAddAlgebra<'a>, ?mask: Vector<'b>) =
+        new(plus: ClosedBinaryOp<'a>, ?mask: Vector<'b>) = EWiseAddContext(ClosedBinaryOpAlgebra plus)
 
-    let eWiseAdd (algebra: EWiseAddAlgebra<'a>) (leftVector: Vector<'a>) (rightVector: Vector<'a>) : GraphblasEvaluation<Vector<'a>> =
+        member internal this.Algebra = algebra
+        member internal this.Mask = mask
+
+    and EWiseAddAlgebra<'a> =
+        | ClosedBinaryOpAlgebra of ClosedBinaryOp<'a>
+
+    let eWiseAdd (leftVector: Vector<'a>) (rightVector: Vector<'a>) (context: EWiseAddContext<'a, _>) : GraphblasEvaluation<Vector<'a>> =
+        match context.Algebra with
+        | ClosedBinaryOpAlgebra (ClosedBinaryOp op) -> ()
         failwith "Not Implemented yet"
 
     type EWiseMultAlgebra<'a> =
@@ -119,41 +133,36 @@ module Vector =
     let reduce (algebra: ReduceAlgebra<'a>) (vector: Vector<'a>) : GraphblasEvaluation<Scalar<'a>> =
         failwith "Not Implemented yet"
 
-    type VxmContext<'a> =
-        {
-            Algebra: VxmAlgebra<'a>
-        }
+    // type VxmContext<'a> =
+    //     {
+    //         Algebra: VxmAlgebra<'a>
+    //     }
 
-    type EWiseAddContext<'a> =
-        {
-            Algebra: EWiseAddAlgebra<'a>
-        }
+    // type EWiseMultContext<'a> =
+    //     {
+    //         Algebra: EWiseMultAlgebra<'a>
+    //     }
 
-    type EWiseMultContext<'a> =
-        {
-            Algebra: EWiseMultAlgebra<'a>
-        }
+    // type ApplyContext<'a, 'b> =
+    //     {
+    //         Algebra: ApplyAlgebra<'a, 'b>
+    //     }
 
-    type ApplyContext<'a, 'b> =
-        {
-            Algebra: ApplyAlgebra<'a, 'b>
-        }
+    // type SelectContext<'a> =
+    //     {
+    //         Algebra: SelectAlgebra<'a>
+    //     }
 
-    type SelectContext<'a> =
-        {
-            Algebra: SelectAlgebra<'a>
-        }
+    // type ReduceContext<'a> =
+    //     {
+    //         Algebra: ReduceAlgebra<'a>
+    //     }
 
-    type ReduceContext<'a> =
-        {
-            Algebra: ReduceAlgebra<'a>
-        }
-
-    let vxmWithMask (semiring: ISemiring<'a>) (mask: Mask1D<_>) (vector: Vector<'a>) (matrix: Matrix<'a>) : GraphblasEvaluation<Vector<'a>> = failwith "Not Implemented yet"
-    let eWiseAddWithMask (monoid: IMonoid<'a>) (mask: Mask1D<_>) (leftVector: Vector<'a>) (rightVector: Vector<'a>) : GraphblasEvaluation<Vector<'a>> = failwith "Not Implemented yet"
-    let eWiseMultWithMask (semiring: ISemiring<'a>) (leftVector: Vector<'a>) (rightVector: Vector<'a>) : GraphblasEvaluation<Vector<'a>> = failwith "Not Implemented yet"
-    let applyWithMask (mapper: UnaryOp<'a, 'b>) (mask: Mask1D<_>) (vector: Vector<'a>) : GraphblasEvaluation<Vector<'b>> = failwith "Not Implemented yet"
-    let selectWithMask (predicate: UnaryOp<'a, bool>) (mask: Mask1D<_>) (vector: Vector<'a>) : GraphblasEvaluation<Vector<'a>> = failwith "Not Implemented yet"
+    // let vxmWithMask (semiring: ISemiring<'a>) (mask: Mask1D<_>) (vector: Vector<'a>) (matrix: Matrix<'a>) : GraphblasEvaluation<Vector<'a>> = failwith "Not Implemented yet"
+    // let eWiseAddWithMask (monoid: IMonoid<'a>) (mask: Mask1D<_>) (leftVector: Vector<'a>) (rightVector: Vector<'a>) : GraphblasEvaluation<Vector<'a>> = failwith "Not Implemented yet"
+    // let eWiseMultWithMask (semiring: ISemiring<'a>) (leftVector: Vector<'a>) (rightVector: Vector<'a>) : GraphblasEvaluation<Vector<'a>> = failwith "Not Implemented yet"
+    // let applyWithMask (mapper: UnaryOp<'a, 'b>) (mask: Mask1D<_>) (vector: Vector<'a>) : GraphblasEvaluation<Vector<'b>> = failwith "Not Implemented yet"
+    // let selectWithMask (predicate: UnaryOp<'a, bool>) (mask: Mask1D<_>) (vector: Vector<'a>) : GraphblasEvaluation<Vector<'a>> = failwith "Not Implemented yet"
 
 [<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module VectorTuples =
@@ -164,15 +173,3 @@ module VectorTuples =
             return ()
         }
         |> EvalGB.fromCl
-
-type A =
-    static member S(s: int) = ()
-
-type A with
-    static member S(s: float) = ()
-
-module C =
-    open type A
-
-    let a = S 1
-    let b = S 1.

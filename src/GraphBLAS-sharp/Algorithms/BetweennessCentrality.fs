@@ -4,7 +4,7 @@ open GraphBLAS.FSharp.Predefined
 open GraphBLAS.FSharp
 
 module BC =
-    let metric (matrix: Matrix<bool>) (source: int) = graphblas {
+    let metric (matrix: Matrix<int>) (source: int) = graphblas {
         let n = Matrix.rowCount matrix
         let! delta = Vector.zeroCreate<float> n
         let! sigma = Matrix.zeroCreate<int> n n
@@ -16,17 +16,17 @@ module BC =
 
         let mutable d = 0
         let mutable sum = 0
-        let mutable isBreak = false
+        let mutable break' = false
 
-        while not isBreak || sum <> 0 do
-            isBreak <- true
+        while not break' || sum <> 0 do
+            break' <- true
 
             do! Matrix.assignRow sigma d q
 
-            do! Vector.eWiseAdd (Vector.EWiseAddAlgebra.ClosedBinaryOp <@ (+) @>) p q
+            do! Vector.eWiseAdd p q ^ Vector.EWiseAddContext(ClosedBinaryOp <@ (+) @>)
             >>= Vector.assignVector p
 
-            do! Vector.vxmWithMask (Vector.EWiseMultAlgebra.ClosedBinaryOp <@ (*) @>) (Vector.mask p) q matrix
+            do! Vector.vxm q matrix ^ Vector.VxmContext(Semiring(ClosedBinaryOp <@ (+) @>, ClosedBinaryOp <@ (*) @>), mask=p)
             >>= Vector.assignVector q
 
             do! Vector.reduce Add.int q
@@ -43,22 +43,17 @@ module BC =
             do! Vector.apply (UnaryOp <@ (+) 1. @>) delta
             >>= Vector.assignVector t1
 
-            do!
-                //Matrix.extractRow sigma i
-                Matrix.extractRow i sigma
-                >>= Vector.apply ^ UnaryOp <@ float @>
-                >>= Vector.assignVector t2
+            do! Matrix.extractRow sigma i
+            >>= Vector.apply ^ UnaryOp <@ float @>
+            >>= Vector.assignVector t2
 
-            do! Vector.eWiseMultWithMask {
-                    Algebra = ClosedBinaryOp <@ (/) @>
-                    Pattern = q
-                } t1 t2
+            do! Vector.eWiseMultWithMask t1 t2
             >>= Vector.assignVector t2
 
             do! Matrix.mxv AddMult.float matrix t2
             >>= Vector.assignVector t3
 
-            do! Matrix.extractRow (i - 1) sigma
+            do! Matrix.extractRow sigma (i - 1)
             >>= Vector.apply ^ UnaryOp <@ float @>
             >>= fun x -> Vector.eWiseMult AddMult.float x t3
             >>= Vector.assignVector t4

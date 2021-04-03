@@ -6,8 +6,9 @@ type UnaryOp<'a, 'b> = Expr<'a -> 'b>
 type BinaryOp<'a, 'b, 'c> = BinaryOp of Expr<'a -> 'b -> 'c>
 
 type ClosedUnaryOp<'a> = ClosedUnaryOp of Expr<'a -> 'a>
-type ClosedBinaryOp<'a> = Expr<'a -> 'a -> 'a>
+type ClosedBinaryOp<'a> = ClosedBinaryOp of Expr<'a -> 'a -> 'a>
 
+type Semiring<'a> = Semiring of plus: ClosedBinaryOp<'a> * times: ClosedBinaryOp<'a>
 
 /// Magma with associative (magma is set with closed binary operator)
 type ISemigroup<'a> =
@@ -46,17 +47,17 @@ type Monoid<'a> =
         member this.Plus = this.AssociativeOp
         member this.Zero = this.Identity
 
-type Semiring<'a> =
-    {
-        PlusMonoid: Monoid<'a>
-        TimesSemigroup: Semigroup<'a>
-    }
+// type Semiring<'a> =
+//     {
+//         PlusMonoid: Monoid<'a>
+//         TimesSemigroup: Semigroup<'a>
+//     }
 
-    interface IMonoid<'a> with
-        member this.Zero = this.PlusMonoid.Identity
-        member this.Plus = this.PlusMonoid.AssociativeOp
+//     interface IMonoid<'a> with
+//         member this.Zero = this.PlusMonoid.Identity
+//         member this.Plus = this.PlusMonoid.AssociativeOp
 
-    interface ISemiring<'a> with
-        member this.Times = this.TimesSemigroup.AssociativeOp
-        member this.Zero = this.PlusMonoid.Identity
-        member this.Plus = this.PlusMonoid.AssociativeOp
+//     interface ISemiring<'a> with
+//         member this.Times = this.TimesSemigroup.AssociativeOp
+//         member this.Zero = this.PlusMonoid.Identity
+//         member this.Plus = this.PlusMonoid.AssociativeOp

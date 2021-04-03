@@ -33,9 +33,6 @@ module Matrix =
     let zeroCreate<'a when 'a : struct> (rowCount: int) (columnCount: int) : GraphblasEvaluation<Matrix<'a>> =
         failwith "Not Implemented yet"
 
-    let fromFile (pathToMatrix: string) : GraphblasEvaluation<Matrix<'a>> =
-        failwith "Not Implemented yet"
-
     (*
         methods
     *)
@@ -66,27 +63,27 @@ module Matrix =
     *)
 
     /// mat.[mask]
-    let extractSubMatrix (mask: Mask2D<_> option) (matrix: Matrix<'a>) : GraphblasEvaluation<Matrix<'a>> =
+    let extractSubMatrix (matrix: Matrix<'a>) (mask: Mask2D<_>) : GraphblasEvaluation<Matrix<'a>> =
         failwith "Not Implemented yet"
 
     /// mat.[rowIdx. *]
-    let extractRow (rowIdx: int) (matrix: Matrix<'a>) : GraphblasEvaluation<Vector<'a>> =
+    let extractRow (matrix: Matrix<'a>) (rowIdx: int) : GraphblasEvaluation<Vector<'a>> =
         failwith "Not Implemented yet"
 
     /// mat.[rowIdx, mask]
-    let extractSubRow (rowIdx: int) (mask: Mask2D<_>) (matrix: Matrix<'a>) : GraphblasEvaluation<Vector<'a>> =
+    let extractSubRow (matrix: Matrix<'a>) (rowIdx: int) (mask: Mask2D<_>) : GraphblasEvaluation<Vector<'a>> =
         failwith "Not Implemented yet"
 
     /// mat.[*, colIdx]
-    let extractCol (colIdx: int) (matrix: Matrix<'a>) : GraphblasEvaluation<Vector<'a>> =
+    let extractCol (matrix: Matrix<'a>) (colIdx: int) : GraphblasEvaluation<Vector<'a>> =
         failwith "Not Implemented yet"
 
     /// mat.[mask. colIdx]
-    let extractSubCol (colIdx: int) (mask: Mask2D<_>) (matrix: Matrix<'a>) : GraphblasEvaluation<Vector<'a>> =
+    let extractSubCol (matrix: Matrix<'a>) (mask: Mask2D<_>) (colIdx: int) : GraphblasEvaluation<Vector<'a>> =
         failwith "Not Implemented yet"
 
     /// mat.[rowIdx, colIdx]
-    let extractValue (rowIdx: int) (colIdx: int) (matrix: Matrix<'a>) : GraphblasEvaluation<Scalar<'a>> =
+    let extractValue (matrix: Matrix<'a>) (rowIdx: int) (colIdx: int) : GraphblasEvaluation<Scalar<'a>> =
         failwith "Not Implemented yet"
 
     /// t <- s

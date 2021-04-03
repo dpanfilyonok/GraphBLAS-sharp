@@ -34,7 +34,6 @@
     <Compile Include="IO/MtxReader.fs" />
     <Compile Include="Methods/Matrix.fs" />
     <Compile Include="Methods/Vector.fs" />
-    <Compile Include="Methods\Algebra.fs" />
     <Compile Include="Predefined/Monoids/Any.fs" />
     <Compile Include="Predefined/Monoids/Add.fs" />
     <Compile Include="Predefined/Monoids/Min.fs" />
