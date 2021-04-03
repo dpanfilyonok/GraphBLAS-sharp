@@ -7,7 +7,7 @@ open GraphBLAS.FSharp.Backend.Common
 open GraphBLAS.FSharp.Backend.COOVector.Utilities
 
 module internal EWiseAdd =
-    let private runNonEmpty (leftIndices: int[]) (leftValues: 'a[]) (rightIndices: int[]) (rightValues: 'a[]) (mask: Mask1D option) (semiring: ISemiring<'a>) : OpenCLEvaluation<int[] * 'a[]> = opencl {
+    let private runNonEmpty (leftIndices: int[]) (leftValues: 'a[]) (rightIndices: int[]) (rightValues: 'a[]) (mask: Mask1D<_> option) (semiring: ISemiring<'a>) : OpenCLEvaluation<int[] * 'a[]> = opencl {
         let! allIndices, allValues = merge leftIndices leftValues rightIndices rightValues mask
 
         let (ClosedBinaryOp plus) = semiring.Plus
@@ -16,7 +16,7 @@ module internal EWiseAdd =
         return! setPositions allIndices allValues rawPositions
     }
 
-    let run (leftIndices: int[]) (leftValues: 'a[]) (rightIndices: int[]) (rightValues: 'a[]) (mask: Mask1D option) (semiring: ISemiring<'a>) : OpenCLEvaluation<int[] * 'a[]> =
+    let run (leftIndices: int[]) (leftValues: 'a[]) (rightIndices: int[]) (rightValues: 'a[]) (mask: Mask1D<_> option) (semiring: ISemiring<'a>) : OpenCLEvaluation<int[] * 'a[]> =
         if leftValues.Length = 0 then
             opencl {
                 let! resultIndices = Copy.run rightIndices

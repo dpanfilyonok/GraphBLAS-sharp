@@ -11,11 +11,13 @@ module BFS =
 
         let mutable currentLevel = 1
         while currentLevel < vertexCount do
-            let! frontierMask = Vector.mask frontier
-            do! levels |> Vector.fillSubVector frontierMask (Scalar currentLevel)
+            do!
+                levels
+                |> Vector.fillSubVector (Mask1D frontier) (Scalar currentLevel)
 
-            let! levelsComplemented = Vector.complemented levels
-            let! frontier = (frontier, matrix) ||> Vector.vxmWithMask AnyAll.bool levelsComplemented
+            let! frontier =
+                (frontier, matrix)
+                ||> Vector.vxmWithMask AnyAll.bool (Complemented1D levels)
 
             currentLevel <- currentLevel + 1
 

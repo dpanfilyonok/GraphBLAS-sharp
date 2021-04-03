@@ -5,14 +5,10 @@ type MaskType =
     | Complemented
     | NoMask
 
-type Mask1D(indices: int[], size: int, isComplemented: bool) =
-    member this.Indices = indices
-    member this.Size = size
-    member this.IsComplemented = isComplemented
+type Mask1D<'a when 'a : struct> =
+    | Mask1D of Vector<'a>
+    | Complemented1D of Vector<'a>
 
-type Mask2D(rowIndices: int[], columnIndices: int[], rowCount: int, columnCount: int, isComplemented: bool) =
-    member this.RowIndices = rowIndices
-    member this.ColumnIndices = columnIndices
-    member this.RowCount = rowCount
-    member this.ColumnCount = columnCount
-    member this.IsComplemented = isComplemented
+type Mask2D<'a when 'a : struct> =
+    | Mask2D of Matrix<'a>
+    | Complemented2D of Matrix<'a>

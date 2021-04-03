@@ -2,11 +2,12 @@ namespace GraphBLAS.FSharp
 
 open Microsoft.FSharp.Quotations
 
-type UnaryOp<'a, 'b> = UnaryOp of Expr<'a -> 'b>
+type UnaryOp<'a, 'b> = Expr<'a -> 'b>
 type BinaryOp<'a, 'b, 'c> = BinaryOp of Expr<'a -> 'b -> 'c>
 
 type ClosedUnaryOp<'a> = ClosedUnaryOp of Expr<'a -> 'a>
-type ClosedBinaryOp<'a> = ClosedBinaryOp of Expr<'a -> 'a -> 'a>
+type ClosedBinaryOp<'a> = Expr<'a -> 'a -> 'a>
+
 
 /// Magma with associative (magma is set with closed binary operator)
 type ISemigroup<'a> =
@@ -59,20 +60,3 @@ type Semiring<'a> =
         member this.Times = this.TimesSemigroup.AssociativeOp
         member this.Zero = this.PlusMonoid.Identity
         member this.Plus = this.PlusMonoid.AssociativeOp
-
-(*
-    мотивация:
-    хотим, чтобы ноль был нулем (даже если он явно в матрице хранится)
-    и все моноиды, определенные над MonoidicType 'a имели корректную семантику
-    (если получился 0 и мы сменили моноид, то этот элемент все еще будет нулем в другом моноиде)
-*)
-
-[<Struct>]
-type MonoidicType<'a> =
-    | Just of 'a
-    | Zero
-
-module MonoidicType =
-    let wrap (isZero: 'a -> bool) x =
-        if isZero x then Zero
-        else Just x
