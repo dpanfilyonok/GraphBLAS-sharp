@@ -309,7 +309,7 @@ module Generators =
 module Utils =
     let defaultConfig =
         { FsCheckConfig.defaultConfig with
-            maxTest = 10
+            maxTest = 1
             startSize = 1
             endSize = 1000
             arbitrary = [
