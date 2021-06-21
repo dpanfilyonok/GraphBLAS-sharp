@@ -66,7 +66,7 @@ and CSRMatrix<'a> =
                 (fun row ->
                     row
                     |> List.mapi (fun i x -> (x, i))
-                    |> List.filter (fun pair -> not <| isZero (fst pair))
+                    |> List.filter (fun (x, _) -> (not << isZero) x)
                 )
             |> List.fold (fun (rowPtrs, valueInx) row ->
                 ((rowPtrs.Head + row.Length) :: rowPtrs), valueInx @ row) ([0], [])

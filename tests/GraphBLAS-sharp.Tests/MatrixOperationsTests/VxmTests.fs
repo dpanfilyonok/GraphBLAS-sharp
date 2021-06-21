@@ -58,7 +58,7 @@ let correctnessGenericTest<'a when 'a : struct>
             resultVector.[i] <-
                 vector
                 |> Array.mapi (fun i v -> times v col.[i])
-                |> Array.reduce (fun x y -> plus x y)
+                |> Array.reduce plus
 
         resultVector
         |> Seq.cast<'a>

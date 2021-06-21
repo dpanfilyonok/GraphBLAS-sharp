@@ -63,7 +63,7 @@ let correctnessGenericTest<'a when 'a : struct>
             resultMatrix.[i, j] <-
                 leftRow
                 |> Array.mapi (fun i v -> times v rightCol.[i])
-                |> Array.reduce (fun x y -> plus x y)
+                |> Array.reduce plus
 
         resultMatrix
         |> Seq.cast<'a>
