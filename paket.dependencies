@@ -23,7 +23,6 @@ nuget BenchmarkDotNet
 nuget MathNet.Numerics.FSharp
 nuget MathNet.Numerics.MKL.Win-x64 2.5.0
 nuget TypeShape 9.0.0
-nuget YC.QuickGraph
 
 // [ FAKE GROUP ]
 group Build
